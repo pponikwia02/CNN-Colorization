@@ -4,7 +4,9 @@ from PIL import Image
 from skimage.color import rgb2lab, lab2rgb, gray2rgb
 import os
 
-model = tf.keras.models.load_model("model/coloring_model.keras")
+model1 = tf.keras.models.load_model("model/model_huber.keras")
+model2 = tf.keras.models.load_model("model/coloring_model.keras")
+
 
 def preprocess_image(path, force_grayscale=False):
     image = Image.open(path).convert('RGB')
@@ -49,10 +51,13 @@ if __name__ == "__main__":
     L_tensor, L_original = preprocess_image(img_path, force_grayscale)
 
 
-    ab_pred = model.predict(L_tensor)  
-
-
-    output_path = os.path.splitext(img_path)[0] + "_colorized.png"
+    ab_pred = model1.predict(L_tensor) 
+    output_path = os.path.splitext(img_path)[0] + "_colorized_model1.png"
     postprocess_and_save(L_original, ab_pred, output_path)
 
-    print(f"Pokolorowany obraz zapisano jako: {output_path}")
+    ab_pred = model2.predict(L_tensor) 
+    output_path = os.path.splitext(img_path)[0] + "_colorized_model2.png"
+    postprocess_and_save(L_original, ab_pred, output_path)
+        
+                  
+   
